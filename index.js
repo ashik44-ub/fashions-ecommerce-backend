@@ -12,7 +12,9 @@ const mongoose = require('mongoose');
 app.use(express.json());
 app.use(cors({
     origin: ['http://localhost:5173', 'https://fashions-ecommerce.vercel.app'],
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 app.use(cookieParser())
 app.use(bodyParser.json())
