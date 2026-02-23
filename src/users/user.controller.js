@@ -79,16 +79,12 @@ const userlogout = async (req, res) => {
 }
 
 const getAllUsers = async (req, res) => {
-    try {
-        // Fetch and sort in one query for better performance
-        const users = await User.find({}, 'email role username').sort({ createdAt: -1 });
-
-        // Corrected: Passing an object, not an assignment
-        return successResponse(res, 200, "All Users Fetch Successful", { data: users });
-    } catch (error) {
-        // Corrected: Consistent error message
-        return errorResponse(res, 500, "Failed to fetch users", error.message);
-    }
+  try {
+    const users =  await User.find({}, 'email role').sort({createdAt: -1});
+    successResponse(res, 200, "All users fetched successfully!", data= users)
+  } catch (error) {
+    errorResponse(res, 500, "Failed to fetch all users!", error);
+  }
 };
 
 const deleteUser = async (req, res) => {

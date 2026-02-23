@@ -1,28 +1,30 @@
 const { errorResponse, successResponse } = require("../utilis/responseHandler");
 
-const jwt = require('jsonwebtoken')
-const jwt_secret = process.env.JWT_SECRET_KEY;
+const jwt =  require('jsonwebtoken')
+
+const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
     try {
-        // ei token ta live server a use korar jonno
-        const token = req.cookies.token;  // todo uncomment this when done
-        //ei token sudu postman a kaj korar jonno
-        //const token = req.headers.authorization?.split(' ')[1]
-        //console.log("Token form cookies", token)
-        if (!token) {
-            return successResponse(res, 401, "Token not found");
+        const token =  req.cookies.token; //TODO: uncomment this when done
+        // const token = req.headers.authorization?.split(' ')[1]
+        // console.log("Token from cookies:", token);
+        if(!token) {
+            return successResponse(res, 401, "Unauthorized Accesss!")
         }
-        const decoded = jwt.verify(token, jwt_secret)
-        if(!decoded.userId){
-            return res.status(403).send({message: "User id not found in token"})
+        const decoded = jwt.verify(token,  JWT_SECRET);
+
+        if(!decoded.userId) {
+            return res.status(403).send({message: "Access denied!"})
         }
-        req.userId = decoded.token;
+
+        req.userId = decoded.userId;
         req.role = decoded.role;
         next();
     } catch (error) {
-        errorResponse(res, 500, "Invalid Token!", error)
+        errorResponse(res, 500, "Invalid Token!", error);
     }
+
 }
 
 module.exports = verifyToken;
